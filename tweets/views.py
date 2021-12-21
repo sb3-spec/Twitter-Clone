@@ -1,66 +1,20 @@
-from django.http.response import Http404, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.conf import settings
-from django.http import HttpResponse
-from django.utils.http import is_safe_url
-import random 
 
-from .models import Tweet
-from .forms import TweetForm
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
+User = settings.AUTH_USER_MODEL
 
 # Create your views here.
-def home_view(request, *args, **kwargs):
-    # return HttpResponse("<h1>Hello World</h1>")
-    return render(request, "pages/home.html", context={})
-
-def tweet_create_view(request, *args, **kwargs):
-    """Creates form view for creating tweets"""
-    form = TweetForm(request.POST or None)
-    next_url = request.POST.get("next") or None
-    if form.is_valid():
-        obj = form.save(commit=False)
-        obj.save()
-        print(request.is_ajax())
-        if request.is_ajax():
-            return JsonResponse(obj.serialize(), status=201)
-        
-        if is_safe_url(next_url, ALLOWED_HOSTS):
-            return redirect(next_url)
-        
-        form = TweetForm()
-    return render(request, 'components/form.html', context={"form": form})
-
-
-def tweet_list_view(request, *args, **kwargs):
-    qs = Tweet.objects.all()
-    tweets_list = [tweet.serialize() for tweet in qs]
-    data = {
-        "isUser": False,
-        "response": tweets_list
+#@permission_classes([IsAuthenticated])
+def tweets_list_view(request, *args, **kwargs):
+    context = {
+        "user": request.user.username
     }
-    
-    return JsonResponse(data)
-    
-    
-    
-def tweet_detail_view(request, tweet_id, *args, **kwargs):
-    """
-    REST API VIEW 
-    Consume by JavaScript 
-    """
-    data = {
-        "id": tweet_id,
-        # "image_path": obj.image.url
-    }
-    status = 200
-    try:
-        obj = Tweet.objects.get(id=tweet_id)
-        data['content'] = obj.content
-    except:
-        data.message('Not Found')
-        status = 400
-    
-    
-    return JsonResponse(data, status=status) # json.dumps
+    print(context)
+    return render(request, "tweets/list.html", context)
+
+# @permission_classes([IsAuthenticated])
+def tweets_detail_view(request, tweet_id, *args, **kwargs):
+    return render(request, "tweets/detail.html", context={"tweet_id": tweet_id})
+

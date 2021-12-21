@@ -1,0 +1,12 @@
+.header {
+    text-align: center;
+}
+
+.home-container {
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+    grid-auto-rows: minmax(150px, auto);
+    justify-content: center;
+}
+
+

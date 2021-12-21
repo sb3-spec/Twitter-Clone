@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,8 +26,12 @@ SECRET_KEY = 'no^e7hxhokj8j-o9nlk82()qst6k8-(+m!4w(w01mbm!&669tk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+LOGIN_URL = "/login"
 
+TWEET_ACTION_OPTIONS = ['like', 'unlike', 'retweet']
+
+MAX_TWEET_LENGTH = 240
 
 # Application definition
 
@@ -37,10 +42,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third-party
+    'corsheaders',
+    'rest_framework',
+    # internal
+    'accounts',
+    'profiles',
     'tweets',
+    
+    
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -48,6 +62,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+]
+CORS_ALLOW_ALL_ORIGIN = True
+CORS_ALLOWED_ORIGIN = [
+    'http://localhost:8000'
 ]
 
 ROOT_URLCONF = 'twitter_clone_back.urls'
@@ -118,4 +137,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static-root")
+
 STATIC_URL = '/static/'
+
+CORS_ORIGIN_ALLOW_ALL = True # any website has access to my api
+CORS_URLS_REGEX = r"^/api/.*$"
+
+DEFAULT_AUTHENTICATION_CLASSES = ['rest_framework.authentication.BasicAuthentication']
+
+DEFAULT_RENDERER_CLASSES = ['rest_framework.renderers.JSONRenderer']
+
+if DEBUG:
+    DEFAULT_RENDERER_CLASSES += ['rest_framework.renderers.BrowsableAPIRenderer']
+    
+    
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': DEFAULT_AUTHENTICATION_CLASSES,
+    'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
+}

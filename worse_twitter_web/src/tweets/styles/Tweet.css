@@ -1,0 +1,43 @@
+.overall-container {
+    padding-bottom: 0;
+    padding-top: 3em;
+    padding-bottom: 1em;
+    width: 38.8em;
+    border: 1px solid #2e2e2e21;
+}
+
+.retweet-width {
+    width: 35em;
+}
+
+.standard-width {
+    width: 38.8em;
+}
+
+.tweet-container {
+    margin-left: 2em;
+    min-height: 6em;
+}
+
+.tweet-text {
+    font-size: 1em;
+}
+
+.buttons { 
+    display: flex;
+    padding-right: 2em;
+    padding-top: 2em;
+    padding-bottom: 0;
+    position: relative;
+    justify-content: bottom;
+}
+
+.retweet-btn {
+    position: absolute;
+    right: 0;
+    padding-right: 2em;
+}
+
+.retweet {
+    width: 30em;
+}
